@@ -1,0 +1,37 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.11.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+}
+
+group = 'top.lzmvlog'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    // 配置镜像仓库
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+    // 优先本地仓库查找
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    runtimeOnly 'mysql:mysql-connector-java'
+    compile group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: '3.4.1'
+}
+
+test {
+    useJUnitPlatform()
+}
