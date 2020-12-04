@@ -3,14 +3,14 @@ package top.lzmvlog.elasticsearchdemo;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import top.lzmvlog.elasticsearchdemo.dao.CacheRepository;
+import top.lzmvlog.elasticsearchdemo.repository.CacheRepository;
 import top.lzmvlog.elasticsearchdemo.model.Student;
 
 @SpringBootTest
 class ElasticsearchDemoApplicationTests {
 
     @Autowired
-    private CacheRepository studentRepository;
+    private CacheRepository<S, Number> studentRepository;
 
     @Test
     void contextLoads() {

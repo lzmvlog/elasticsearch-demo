@@ -1,6 +1,5 @@
 package top.lzmvlog.elasticsearchdemo.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -8,9 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import top.lzmvlog.elasticsearchdemo.dao.CacheRepository;
 import top.lzmvlog.elasticsearchdemo.model.Student;
-import top.lzmvlog.elasticsearchdemo.service.StudentService;
+import top.lzmvlog.elasticsearchdemo.repository.CacheRepository;
 import top.lzmvlog.elasticsearchdemo.util.R;
 
 import java.util.List;
@@ -24,11 +22,14 @@ import java.util.Optional;
 @RestController
 public class StudentController {
 
-    @Autowired
-    private CacheRepository cacheRepository;
+    private final CacheRepository<Student, Integer> cacheRepository;
 
-    @Autowired
-    private StudentService studentService;
+    StudentController(CacheRepository<Student, Integer> cacheRepository) {
+        this.cacheRepository = cacheRepository;
+    }
+
+//    @Autowired
+//    private StudentService studentService;
 
     /**
      * 新增
