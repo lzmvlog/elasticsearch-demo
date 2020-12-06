@@ -1,8 +1,8 @@
 package top.lzmvlog.elasticsearchdemo.repository;
 
+import org.springframework.data.domain.Slice;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.repository.NoRepositoryBean;
-import org.springframework.stereotype.Repository;
 import top.lzmvlog.elasticsearchdemo.model.Student;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  */
 //@Repository
 @NoRepositoryBean
-public interface CacheRepository<S, I extends Number> extends ElasticsearchRepository<Student, Integer> {
+public interface CacheRepository<S, I extends Number> extends ElasticsearchRepository<S, I> {
 
     /**
      * 接口类注解：
@@ -24,7 +24,8 @@ public interface CacheRepository<S, I extends Number> extends ElasticsearchRepos
      * Resulting:
      * springboot不会为其自动创建 bean
      *
-     * Parameter 0 of constructor in top.lzmvlog.elasticsearchdemo.controller.StudentController required a bean of type 'top.lzmvlog.elasticsearchdemo.repository.CacheRepository' that could not be found.
+     * Parameter 0 of constructor in top.lzmvlog.elasticsearchdemo.controller.StudentController required a bean of type
+     * 'top.lzmvlog.elasticsearchdemo.repository.CacheRepository' that could not be found.
      */
 
     /**
@@ -34,6 +35,15 @@ public interface CacheRepository<S, I extends Number> extends ElasticsearchRepos
      * @return
      */
     List<Student> findAllByNameLike(String name);
+
+
+    /**
+     * 查询年龄大学生信息
+     *
+     * @param age 年龄
+     * @return
+     */
+    Slice<Student> findTopByAgeGreaterThan(Integer age);
 
     /**
      * 查询
@@ -75,14 +85,3 @@ public interface CacheRepository<S, I extends Number> extends ElasticsearchRepos
      */
 }
 
-@Repository
-interface StudentRepository extends CacheRepository<Student, Integer> {
-
-    /**
-     * 模糊查询所有学生名称
-     *
-     * @param name 名称
-     * @return
-     */
-    List<Student> findAllByNameLike(String name);
-}

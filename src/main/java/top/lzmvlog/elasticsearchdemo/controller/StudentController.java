@@ -2,13 +2,15 @@ package top.lzmvlog.elasticsearchdemo.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import top.lzmvlog.elasticsearchdemo.model.Student;
-import top.lzmvlog.elasticsearchdemo.repository.CacheRepository;
+import top.lzmvlog.elasticsearchdemo.repository.StudentRepository;
 import top.lzmvlog.elasticsearchdemo.util.R;
 
 import java.util.List;
@@ -22,10 +24,10 @@ import java.util.Optional;
 @RestController
 public class StudentController {
 
-    private final CacheRepository<Student, Integer> cacheRepository;
+    private final StudentRepository studentRepository;
 
-    StudentController(CacheRepository<Student, Integer> cacheRepository) {
-        this.cacheRepository = cacheRepository;
+    StudentController(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
     }
 
 //    @Autowired
@@ -41,9 +43,9 @@ public class StudentController {
     public R save(@RequestBody Student student) {
         // 持久层
 //        studentService.save(student);
-        // 缓存
-        cacheRepository.save(student);
-        return new R(HttpStatus.OK);
+        // 缓存 存放主健一致时 覆盖原因的值 可以用于修改
+        studentRepository.save(student);
+        return new R(HttpStatus.OK.value());
     }
 
     /**
@@ -53,7 +55,7 @@ public class StudentController {
      */
     @GetMapping("selectById")
     public Optional<Student> selectById(Integer id) {
-        return cacheRepository.findById(id);
+        return studentRepository.findById(id);
     }
 
     /**
@@ -63,7 +65,10 @@ public class StudentController {
      */
     @GetMapping("select")
     public Iterable<Student> select() {
-        return cacheRepository.findAll();
+        // 展示不支持 lambdas 表达式
+        // 倒叙查找
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        return studentRepository.findAll(sort);
     }
 
     /**
@@ -73,26 +78,29 @@ public class StudentController {
      */
     @GetMapping("selectPage")
     public Page<Student> selectPage(Pageable pageable) {
-        return cacheRepository.findAll(pageable);
+        return studentRepository.findAll(pageable);
     }
 
     /**
-     * 查询全部
+     * 根据名称模糊查询
      *
      * @return
      */
     @GetMapping("selectAllByName")
     public List<Student> selectAllByName(String name) {
-        // 搜索源构建器
-//        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-//        searchSourceBuilder.query();
+        return studentRepository.findAllByNameLike(name);
+    }
 
-//        QueryBuilder queryBuilder = new QueryStringQueryBuilder();
-//        queryBuilder.queryName()
-
-//        return cacheRepository.search(new QueryStringQueryBuilder("name").field("4"), pageable);
-
-        return cacheRepository.findAllByNameLike(name);
+    /**
+     * 按照年龄查询
+     *
+     * @param age 年龄
+     * @return
+     */
+    @GetMapping("selectAllByAge")
+    public List<Student> selectAllByAge(Integer age) {
+        Slice<Student> studentSlice = studentRepository.findTopByAgeGreaterThan(age);
+        return studentSlice.getContent();
     }
 
     /**
@@ -102,8 +110,8 @@ public class StudentController {
      */
     @GetMapping("delete")
     public R delete() {
-        cacheRepository.deleteAll();
-        return new R(HttpStatus.OK);
+        studentRepository.deleteAll();
+        return new R(HttpStatus.OK.value());
     }
 
     /**
@@ -113,8 +121,8 @@ public class StudentController {
      */
     @GetMapping("deleteById")
     public R deleteById(Integer id) {
-        cacheRepository.deleteById(id);
-        return new R(HttpStatus.OK);
+        studentRepository.deleteById(id);
+        return new R(HttpStatus.OK.value());
     }
 
 }

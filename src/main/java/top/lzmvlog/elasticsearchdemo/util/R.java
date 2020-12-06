@@ -2,7 +2,6 @@ package top.lzmvlog.elasticsearchdemo.util;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
 
 /**
  * @author ShaoJie
@@ -16,7 +15,7 @@ public class R {
     /**
      * 响应码
      */
-    private HttpStatus code;
+    private int code;
 
     /**
      * 响应信息
@@ -35,7 +34,7 @@ public class R {
      * @param msg  响应信息
      * @param data 响应数据
      */
-    public R(HttpStatus code, String msg, Object data) {
+    public R(int code, String msg, Object data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
@@ -47,7 +46,7 @@ public class R {
      * @param code 响应信息
      * @param msg  响应数据
      */
-    public R(HttpStatus code, String msg) {
+    public R(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }
@@ -58,7 +57,7 @@ public class R {
      * @param code 响应信息
      * @param data 响应数据
      */
-    public R(HttpStatus code, Object data) {
+    public R(int code, Object data) {
         this.code = code;
         this.data = data;
     }
@@ -68,7 +67,7 @@ public class R {
      *
      * @param code 响应信息
      */
-    public R(HttpStatus code) {
+    public R(int code) {
         this.code = code;
     }
 
