@@ -1,5 +1,6 @@
 package top.lzmvlog.elasticsearchdemo.controller;
 
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -125,4 +126,16 @@ public class StudentController {
         return new R(HttpStatus.OK.value());
     }
 
+//    ----------------
+
+    /**
+     * 原生方法执行 term
+     *
+     * @return
+     */
+    public R searchselect(Pageable pageable) {
+        // 原生操作 主要是 QueryBuilders操作
+        return new R(HttpStatus.OK.value(),
+                studentRepository.search(QueryBuilders.termQuery("name", "s"), pageable));
+    }
 }
